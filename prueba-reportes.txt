@@ -4,7 +4,6 @@ http://localhost:3000/reportes
   "descripcion": "Daño en alumbrado público"
 }
 http://localhost:3000/reportes
-touch prueba-reportes.txt
 [
   {
     "id": 1,
