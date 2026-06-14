@@ -11,3 +11,46 @@ http://localhost:3000/reportes
     "descripcion": "Daño en alumbrado público"
   }
 ]
+1. La Petición (El Registro)json// POST http://localhost:3000/reportes
+{
+  "tipo": "Infraestructura",
+  "descripcion": "Daño en alumbrado público"
+}
+Usa el código con precaución.Acción: Estás enviando datos al servidor mediante una ruta POST.Proceso: El servidor Express recibe la información, la procesa gracias a express.json() y la guarda en la base de datos (o en un array temporal en memoria), asignándole automáticamente un identificador único (id: 1).2. La Respuesta o Consulta (La Lectura)json// GET http://localhost:3000/reportes
+[
+  {
+    "id": 1,
+    "tipo": "Infraestructura",
+    "descripcion": "Daño en alumbrado público"
+  }
+]
+Usa el código con precaución.Acción: Estás consultando la lista de incidencias mediante una ruta GET.Proceso: El servidor responde con un array que contiene el objeto que acabas de registrar, ahora con su propiedad id incorporada.¿Cómo se vería el código en Express para que esta prueba funcione?Si quisieras replicar exactamente este comportamiento en tu archivo de servidor, el código estructurado se vería de la siguiente manera:javascriptconst express = require('express');
+const app = express();
+
+// Middleware obligatorio para leer el JSON enviado
+app.use(express.json());
+
+// Array temporal (en memoria) para almacenar los reportes
+let reportes = [];
+let proximoId = 1;
+
+// 1. Ruta POST para registrar el reporte
+app.post('/reportes', (req, res) => {
+    const { tipo, descripcion } = req.body;
+    
+    const nuevoReporte = {
+        id: proximoId++,
+        tipo,
+        descripcion
+    };
+    
+    reportes.push(nuevoReporte);
+    res.status(201).json(nuevoReporte);
+});
+
+// 2. Ruta GET para consultar todos los reportes
+app.get('/reportes', (req, res) => {
+    res.json(reportes);
+});
+
+app.listen(3000, () => console.log('Servidor corriendo en el puerto 3000'));
